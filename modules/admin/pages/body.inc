@@ -54,7 +54,7 @@ const FIELD = 'Field';
     <div id="left_bar" class="ADMIN-center-bar">
         <form action="index.php?Function=admin" method="POST" class="form-inline">
             <fieldset>
-                <legend>Basic NeonCRM Account Search</legend>
+                <legend>Basic Account Search</legend>
                 <p>
                     <label class='UI-label'>First Name</label>
                     <input type="text" class="form-control" name="firstName"

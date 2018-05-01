@@ -136,14 +136,6 @@ try {
     $db = new DB;
     _config_from_Database();
 
-    // Include NeonCRM for DB calls via API
-    if (array_key_exists('NEONID', $GLOBALS) &&
-        array_key_exists('NEONKEY', $GLOBALS) &&
-        !empty($GLOBALS['NEONID']) &&
-        !empty($GLOBALS['NEONKEY'])) {
-        require_once(__DIR__."/neon.inc");
-    }
-
     // Load the base of all active modules
     $modules = scandir($MODULESDIR);
     foreach ($modules as $key => $value) {

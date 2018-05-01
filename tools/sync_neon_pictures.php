@@ -6,6 +6,7 @@
 
 require_once(__DIR__."/../functions/functions.inc");
 require_once(__DIR__."/../backends/asset.inc");
+require_once(__DIR__."/../functions/neon.inc");
 
 
 function do_Neon_import()

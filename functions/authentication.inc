@@ -21,9 +21,6 @@ function LogoutUser()
 {
     // Since we check for username, clearing the session logs the user out.
     // Because of that, we do not need to destroy the session, all the data and info is gone anyway.
-    if (array_key_exists('Neon', $GLOBALS)) {
-        $GLOBALS['Neon']->logout();
-    }
     $_SESSION = [];
 
     // Remove cookies!
