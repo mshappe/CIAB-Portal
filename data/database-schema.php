@@ -210,6 +210,7 @@ class SCHEMA
             'DepartmentID' => 'Departments (DepartmentID) ON DELETE RESTRICT ON UPDATE CASCADE',
             'EventID' => 'Events (EventID) ON DELETE RESTRICT ON UPDATE CASCADE',
             'PositionID' => 'ConComPositions (PositionID) ON DELETE RESTRICT ON UPDATE CASCADE',
+            'AccountID' => 'Members (AccountID) ON DELETE RESTRICT ON UPDATE CASCADE',
         ],
         'DBPullPage' => [
             'RegistrationID' => 'Registrations (RegistrationID) ON DELETE RESTRICT ON UPDATE CASCADE',
@@ -219,6 +220,7 @@ class SCHEMA
         ],
         'ElegibleVoters' => [
             'AnnualCycleID' => 'AnnualCycles (AnnualCycleID) ON DELETE RESTRICT ON UPDATE CASCADE',
+            'AccountID' => 'Members (AccountID) ON DELETE RESTRICT ON UPDATE CASCADE',
         ],
         'EMails' => [
             'DepartmentID' => 'Departments (DepartmentID) ON DELETE RESTRICT ON UPDATE CASCADE',
@@ -229,9 +231,11 @@ class SCHEMA
         'HourRedemptions' => [
             'EventID' => 'Events (EventID) ON DELETE RESTRICT ON UPDATE CASCADE',
             'PrizeID' => 'VolunteerRewards (PrizeID) ON DELETE RESTRICT ON UPDATE CASCADE',
+            'AccountID' => 'Members (AccountID) ON DELETE RESTRICT ON UPDATE CASCADE',
         ],
         'MeetingAttendance' => [
             'MeetingID' => 'OfficialMeetings (MeetingID) ON DELETE RESTRICT ON UPDATE CASCADE',
+            'AccountID' => 'Members (AccountID) ON DELETE RESTRICT ON UPDATE CASCADE',
         ],
         'OfficialMeetings' => [
             'EventID' => 'Events (EventID) ON DELETE RESTRICT ON UPDATE CASCADE',
@@ -244,9 +248,15 @@ class SCHEMA
         'VolunteerHours' => [
             'DepartmentID' => 'Departments (DepartmentID) ON DELETE RESTRICT ON UPDATE CASCADE',
             'EventID' => 'Events (EventID) ON DELETE RESTRICT ON UPDATE CASCADE',
+            'AccountID' => 'Members (AccountID) ON DELETE RESTRICT ON UPDATE CASCADE',
+            'AuthorizedByID' => 'Members (AccountID) ON DELETE RESTRICT ON UPDATE CASCADE',
+            'EnteredByID' => 'Members (AccountID) ON DELETE RESTRICT ON UPDATE CASCADE',
         ],
         'VolunteerRewards' => [
             'RewardGroupID' => 'RewardGroup (RewardGroupID) ON DELETE RESTRICT ON UPDATE CASCADE',
+        ],
+        'Authentication' => [
+            'AccountID' => 'Members (AccountID) ON DELETE RESTRICT ON UPDATE CASCADE',
         ],
     ];
 
