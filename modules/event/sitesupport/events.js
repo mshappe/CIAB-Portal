@@ -15,10 +15,6 @@ function basicEventRequest(parameter, finish) {
   basicBackendRequest('POST', 'event', parameter, finish);
 }
 
-function reloadFromNeon() {
-  window.location = 'index.php?Function=event&reloadFromNeon=1';
-}
-
 function newMeeting() {
   var today = new Date();
   var dd = today.getDate();
