@@ -217,6 +217,24 @@ SQL;
         }
         print '<input type="file" name="fileToUpload" id="fileToUpload'.$event.'" accept="" style="display:none" onchange="uploadBanner('.$event.', this.files);">';
         print '&nbsp;&nbsp;<button id="banner_select" class="UI-eventbutton" onclick="startBannerUpload('.$event.');">Upload Banner</button>';
+        print "<hr>";
+        if (file_exists($BASEDIR.'/resources/data/event/'.$event.'_waiver.html')) {
+            print '<a target="_blank" href="/resources/data/event/'.$event.'_waiver.html?'.time().'">Waiver Present</b></a>';
+            print '<input type="file" name="waiverToUpload'.$event.'" id="waiverToUpload'.$event.'" accept="text/html" style="display:none" onchange="uploadWaiver('.$event.', this.files);">';
+        } else {
+            print '<span>NO Waiver Present<span>';
+            print '<input type="file" name="waiverToUpload'.$event.'" id="waiverToUpload'.$event.'" accept="text/html" style="display:none" onchange="uploadWaiver('.$event.', this.files);">';
+        }
+        print '&nbsp;&nbsp;<button id="waver_select" class="UI-eventbutton" onclick="startWaiverUpload('.$event.');">Upload Waiver</button>';
+        print "<hr>";
+        if (file_exists($BASEDIR.'/resources/data/event/'.$event.'_policy.html')) {
+            print '<a target="_blank" href="/resources/data/event/'.$event.'_policy.html?'.time().'">Policy Present</b></a>';
+            print '<input type="file" name="policyToUpload'.$event.'" id="policyToUpload'.$event.'" accept="text/html" style="display:none" onchange="uploadPolicy('.$event.', this.files);">';
+        } else {
+            print '<span>NO Policy Present<span>';
+            print '<input type="file" name="policyToUpload'.$event.'" id="policyToUpload'.$event.'" accept="text/html" style="display:none" onchange="uploadPolicy('.$event.', this.files);">';
+        }
+        print '&nbsp;&nbsp;<button id="policy_select" class="UI-eventbutton" onclick="startPolicyUpload('.$event.');">Upload Policy</button>';
         print "</div>";
         print "<div class='w3-center'>";
         $json = json_encode($entry);
@@ -694,5 +712,33 @@ function update_banner($file, $event)
     $data = file_get_contents($target);
     $name = 'event_banner_'.$event;
     \ciab\Asset::save($name, $data);
+
+}
+
+
+function update_waiver($file, $event)
+{
+    global $BASEDIR;
+
+    $target = $BASEDIR.'/resources/data/event/'.$event.'_waiver.html';
+    if (file_exists($target)) {
+        chmod($target, 0755);
+        unlink($target);
+    }
+    move_uploaded_file($file["tmp_name"], $target);
+
+}
+
+
+function update_policy($file, $event)
+{
+    global $BASEDIR;
+
+    $target = $BASEDIR.'/resources/data/event/'.$event.'_policy.html';
+    if (file_exists($target)) {
+        chmod($target, 0755);
+        unlink($target);
+    }
+    move_uploaded_file($file["tmp_name"], $target);
 
 }

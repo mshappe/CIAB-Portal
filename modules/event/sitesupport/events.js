@@ -10,7 +10,8 @@
             editEvent, saveBadge, editBadge, newBadge, deleteBadge,
             expandEvent, saveCycle, newCycle, deleteMeeting,
             saveMeeting, editMeeting, newMeeting, reloadFromNeon, uploadBanner,
-            startBannerUpload, populateEvent */
+            startBannerUpload, populateEvent, uploadWaiver, startWaiverUpload,
+            uploadPolicy, startPolicyUpload */
 
 function basicEventRequest(parameter, finish) {
   basicBackendRequest('POST', 'event', parameter, finish);
@@ -278,4 +279,36 @@ function populateEvent() {
         type[i].setAttribute('accept', output.value);
       }
     });
+}
+
+function uploadWaiver(evnt, file) {
+  var waiver = file[0];
+  var formData = new FormData();
+
+  formData.append('waiver', waiver);
+  formData.append('waiverEvent', evnt);
+  basicEventRequest(formData, function() {
+    location.reload();
+  });
+}
+
+function startWaiverUpload(evnt) {
+  var upload = document.getElementById('waiverToUpload' + evnt);
+  upload.click();
+}
+
+function uploadPolicy(evnt, file) {
+  var policy = file[0];
+  var formData = new FormData();
+
+  formData.append('policy', policy);
+  formData.append('policyEvent', evnt);
+  basicEventRequest(formData, function() {
+    location.reload();
+  });
+}
+
+function startPolicyUpload(evnt) {
+  var upload = document.getElementById('policyToUpload' + evnt);
+  upload.click();
 }

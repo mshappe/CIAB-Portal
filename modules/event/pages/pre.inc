@@ -46,6 +46,8 @@ if (!empty($_REQUEST)) {
     'duplicateConcom' => FILTER_SANITIZE_NUMBER_INT,
     'from' => FILTER_SANITIZE_NUMBER_INT,
     'bannerEvent' => FILTER_SANITIZE_NUMBER_INT,
+    'waiverEvent' => FILTER_SANITIZE_NUMBER_INT,
+    'policyEvent' => FILTER_SANITIZE_NUMBER_INT,
     ];
 
     $updateData = filter_input_array(INPUT_POST, $arguments);
@@ -96,6 +98,16 @@ if (!empty($_REQUEST)) {
 
     if (isset($updateData['bannerEvent'])) {
         update_banner($_FILES["bannerImage"], $updateData['bannerEvent']);
+        exit();
+    }
+
+    if (isset($updateData['waiverEvent'])) {
+        update_waiver($_FILES["waiver"], $updateData['waiverEvent']);
+        exit();
+    }
+
+    if (isset($updateData['policyEvent'])) {
+        update_policy($_FILES["policy"], $updateData['policyEvent']);
         exit();
     }
 }
