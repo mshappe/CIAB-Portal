@@ -10,6 +10,8 @@ if (array_key_exists('Neon', $GLOBALS)) {
     require_once($FUNCTIONDIR."/update/from_neon_to_152.inc");
 }
 
+require_once($BACKEND."/asset.inc");
+
 
 function _event_details($id)
 {
@@ -207,6 +209,16 @@ SQL;
         }
         print "</table>";
         print "<div class='UI-center'>";
+        $name = 'event_banner_'.$event;
+        if (\ciab\Asset::exists($name)) {
+            print '<img src="'.\ciab\Asset::load($name).'" width="100px">';
+        } else {
+            print '<span> NO Banner Image:<span>';
+        }
+        print '<input type="file" name="fileToUpload" id="fileToUpload'.$event.'" accept="" style="display:none" onchange="uploadBanner('.$event.', this.files);">';
+        print '&nbsp;&nbsp;<button id="banner_select" class="UI-eventbutton" onclick="startBannerUpload('.$event.');">Upload Banner</button>';
+        print "</div>";
+        print "<div class='w3-center'>";
         $json = json_encode($entry);
         $json = base64_encode($json);
         print "<button class='UI-eventbutton UI-margin' onclick='editEvent(\"$plain_name\",\"$json\")'>Modify Event</button>";
@@ -641,5 +653,46 @@ function attendance_report($event = null)
             )
        ORDER BY `Count` DESC
 SQL;
+
+}
+
+
+function update_banner($file, $event)
+{
+    if (!isset($file['error']) ||
+        is_array($file['error'])) {
+        return;
+    }
+
+    switch ($file['error']) {
+        case UPLOAD_ERR_OK:
+            break;
+        case UPLOAD_ERR_NO_FILE:
+            error_log('No file sent.');
+            return;
+        case UPLOAD_ERR_INI_SIZE:
+        case UPLOAD_ERR_FORM_SIZE:
+            error_log('Exceeded filesize limit.');
+            return;
+        default:
+            error_log('Unknown errors.');
+            return;
+    }
+
+    $target = sprintf(
+        sys_get_temp_dir().'/%s.%s',
+        sha1_file($file['tmp_name']),
+        '.img'
+    );
+    $path = realpath(dirname($file['tmp_name']));
+    $base = basename($file['tmp_name']);
+    if (!move_uploaded_file($path.DIRECTORY_SEPARATOR.$base, $target)) {
+        error_log('File move failed.');
+        return;
+    }
+
+    $data = file_get_contents($target);
+    $name = 'event_banner_'.$event;
+    \ciab\Asset::save($name, $data);
 
 }

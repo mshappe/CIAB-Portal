@@ -9,7 +9,8 @@
 /* exported doImport, importConcom, deleteEvent, newEvent, saveEvent,
             editEvent, saveBadge, editBadge, newBadge, deleteBadge,
             expandEvent, saveCycle, newCycle, deleteMeeting,
-            saveMeeting, editMeeting, newMeeting, reloadFromNeon */
+            saveMeeting, editMeeting, newMeeting, reloadFromNeon, uploadBanner,
+            startBannerUpload, populateEvent */
 
 function basicEventRequest(parameter, finish) {
   basicBackendRequest('POST', 'event', parameter, finish);
@@ -251,4 +252,30 @@ function doImport() {
     hideSidebar();
     location.reload();
   });
+}
+
+function uploadBanner(evnt, file) {
+  var image = file[0];
+  var formData = new FormData();
+  formData.append('bannerImage', image);
+  formData.append('bannerEvent', evnt);
+  basicEventRequest(formData, function() {
+    location.reload();
+  });
+}
+
+function startBannerUpload(evnt) {
+  var upload = document.getElementById('fileToUpload' + evnt);
+  upload.click();
+}
+
+function populateEvent() {
+  basicBackendRequest('GET', 'event', 'configuration=1',
+    function(request) {
+      var output = JSON.parse(request.responseText);
+      var type = document.getElementsByName('fileToUpload');
+      for (var i = 0; i < type.length; i++) {
+        type[i].setAttribute('accept', output.value);
+      }
+    });
 }

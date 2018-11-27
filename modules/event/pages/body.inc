@@ -217,3 +217,11 @@ foreach ($events as $event) {
     </div>
 
 </div>
+
+<script>
+if (window.addEventListener) {
+  window.addEventListener('load', populateEvent);
+} else {
+  window.attachEvent('onload', populateEvent);
+}
+</script>

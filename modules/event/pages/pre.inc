@@ -15,6 +15,7 @@ require_once(__DIR__.'/../functions/functions.inc');
 if (!empty($_REQUEST)) {
     $arguments = [
     'reloadFromNeon' => FILTER_SANITIZE_NUMBER_INT,
+    'configuration' => FILTER_SANITIZE_NUMBER_INT,
     ];
 
     $updateData = filter_input_array(INPUT_GET, $arguments);
@@ -23,6 +24,12 @@ if (!empty($_REQUEST)) {
         import_events();
         import_meetings();
         header("Refresh:0; url=index.php?Function=event");
+        exit();
+    }
+
+    if (isset($updateData['configuration'])) {
+        $config = \ciab\Asset::configuration();
+        print json_encode($config['ASSET_TYPES']);
         exit();
     }
 
@@ -38,6 +45,7 @@ if (!empty($_REQUEST)) {
     'event' => FILTER_SANITIZE_STRING,
     'duplicateConcom' => FILTER_SANITIZE_NUMBER_INT,
     'from' => FILTER_SANITIZE_NUMBER_INT,
+    'bannerEvent' => FILTER_SANITIZE_NUMBER_INT,
     ];
 
     $updateData = filter_input_array(INPUT_POST, $arguments);
@@ -83,6 +91,11 @@ if (!empty($_REQUEST)) {
 
     if (isset($updateData['duplicateConcom'])) {
         duplicate_concom($updateData['duplicateConcom'], $updateData['from']);
+        exit();
+    }
+
+    if (isset($updateData['bannerEvent'])) {
+        update_banner($_FILES["bannerImage"], $updateData['bannerEvent']);
         exit();
     }
 }
