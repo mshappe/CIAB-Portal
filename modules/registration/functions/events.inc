@@ -4,9 +4,34 @@
     require_module 'standard';
 .*/
 
-
+require_once(__DIR__."/../../../tools/neon_event_lib.inc");
 require_once($FUNCTIONDIR."/database.inc");
 require_once($FUNCTIONDIR."/users.inc");
+
+
+function refresh_data($accountId)
+{
+    $sql = <<<SQL
+        SELECT
+            *
+        FROM
+            `TempEventPage`
+        WHERE
+            `AccountID` = $accountId;
+SQL;
+    $result = DB::run($sql);
+    $value = $result->fetch();
+    $fields = _loadEventCustomFields();
+    while ($value !== false) {
+        $page = $value['PageFound'];
+        $event = current_eventID();
+        $people = _lookup_events_attendees($fields, $event, $page, null, false);
+        $neonEvent = ['MySQLEventID' => current_eventID()];
+        _import_page_of_people($neonEvent, $people, $page);
+        $value = $result->fetch();
+    }
+
+}
 
 
 function get_tickets($id, $event = null)
@@ -79,6 +104,25 @@ SQL;
 }
 
 
+function get_badge_types($event = null, $date = null)
+{
+    if ($event === null) {
+        $event = current_eventID();
+    }
+    if ($date === null) {
+        $date = "CURRENT_DATE";
+    }
+    $sql = "SELECT * FROM `BadgeTypes` WHERE EventID = $event";
+    if ($date !== null) {
+        $sql .= " AND `AvailableFrom` <= $date";
+        $sql .= " AND `AvailableTo` >= $date";
+    }
+    $result = load_table($sql);
+    return $result;
+
+}
+
+
 function print_badge($data)
 {
     $csv = array();
@@ -98,6 +142,15 @@ function print_badge($data)
 }
 
 
+function get_upcoming()
+{
+    $sql = "SELECT * FROM `Events` WHERE DateTo > NOW() ORDER BY `DateFrom` DESC;";
+    $result = load_table($sql);
+    return $result;
+
+}
+
+
 function update_badge($data)
 {
     $name = MyPDO::quote($data->{'Badge Name'});
@@ -108,6 +161,32 @@ function update_badge($data)
         `BadgeName` = $name
     WHERE
         `RegistrationID` = $data->RegID
+SQL;
+    DB::run($sql);
+
+}
+
+
+function add_registration($data)
+{
+    $accountID  = $data->Purchaser;
+    $event = $data->Event;
+    $type = $data->Badge;
+    $badge = MyPDO::quote($data->BadgeName);
+    $contact = MyPDO::quote($data->Emergency);
+
+    $sql = <<<SQL
+        INSERT INTO `Registrations` (
+            RegistrationID, AccountID, EventID,
+            RegisteredByID, RegistrationDate,
+            BadgesPickedUp, BadgeName, BadgeTypeID,
+            EmergencyContact
+        )
+        VALUES
+            (
+                NULL, $accountID, $event, $accountID,
+                NOW(), 0, $badge, $type, $contact
+            );
 SQL;
     DB::run($sql);
 
